@@ -72,7 +72,22 @@ public class OrderConfirmationActivity extends AppCompatActivity {
     private void calculateTotal() {
         // 在这里计算总金额的逻辑
         // 这里只是简单地显示一个 Toast
-        Toast.makeText(this, "Calculate Total", Toast.LENGTH_SHORT).show();
+        // Toast.makeText(this, "Calculate Total", Toast.LENGTH_SHORT).show();
+
+        
+        // 这里只是一个示例，假设每个机票价格为 100 元，航班险价格为 20 元
+        double ticketPrice = 100; // 假设每个机票价格为 100 元
+        double insurancePrice = 0;
+
+        if (chkInsurance.isChecked()) {
+            insurancePrice = 20; // 如果选择了航班险，则价格为 20 元
+        }
+
+        // 计算总金额
+        double totalAmount = ticketPrice + insurancePrice;
+
+        // 将总金额显示在 TextView 中
+        tvTotalAmount.setText("Total Amount: " + totalAmount + "元");
     }
 
     private void checkout() {
