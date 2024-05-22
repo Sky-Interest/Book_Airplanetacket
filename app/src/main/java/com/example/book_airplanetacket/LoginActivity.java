@@ -60,7 +60,7 @@ public class LoginActivity extends AppCompatActivity {
 
         // 查询数据库中的用户名和密码
         String[] projection = {
-                DatabaseHelper.COLUMN_ID,
+                DatabaseHelper.COLUMN_USER_ID,
                 DatabaseHelper.COLUMN_USERNAME,
                 DatabaseHelper.COLUMN_PASSWORD
         };
