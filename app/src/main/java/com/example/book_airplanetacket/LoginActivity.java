@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,6 +20,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private DatabaseHelper dbHelper;
 
+    private static final String TAG = "LoginActivity";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,13 +34,14 @@ public class LoginActivity extends AppCompatActivity {
 
         dbHelper = new DatabaseHelper(this);
 
-        btnLogin.setOnClickListener(v -> loginUser());
+        btnLogin.setOnClickListener(v -> {
+            Log.d(TAG, "Login button clicked");
+            loginUser();
+        });
 
-        tvRegister.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(LoginActivity.this, RegistrationActivity.class));
-            }
+        tvRegister.setOnClickListener(v -> {
+            Log.d(TAG, "Register TextView clicked");
+            startActivity(new Intent(LoginActivity.this, RegistrationActivity.class));
         });
     }
 
@@ -79,6 +83,7 @@ public class LoginActivity extends AppCompatActivity {
 
         if (loginSuccessful) {
             // 登录成功，跳转到订票界面
+            Log.d(TAG, "Login successful, starting TicketBookingActivity");
             startActivity(new Intent(LoginActivity.this, TicketBookingActivity.class));
             finish(); // 关闭当前页面
         } else {

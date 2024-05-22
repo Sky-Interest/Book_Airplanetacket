@@ -12,6 +12,8 @@ public class MainActivity extends AppCompatActivity {
 //        setContentView(R.layout.activity_main);
         setContentView(R.layout.activity_login);
 //        setContentView(R.layout.activity_ticket_booking);
+//        setContentView(R.layout.activity_registration);
+
 
 
     }

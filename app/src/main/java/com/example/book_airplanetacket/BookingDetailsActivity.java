@@ -60,7 +60,7 @@ public class BookingDetailsActivity extends AppCompatActivity {
 
         // 创建一个 ContentValues 对象，用于存储数据
         ContentValues values = new ContentValues();
-        values.put(DatabaseHelper.COLUMN_PASSSENGER_NAME, passengerName);
+        values.put(DatabaseHelper.COLUMN_PASSENGER_NAME, passengerName);
 
         // 向数据库插入数据
         long newRowId = db.insert(DatabaseHelper.TABLE_PASSENGERS, null, values);

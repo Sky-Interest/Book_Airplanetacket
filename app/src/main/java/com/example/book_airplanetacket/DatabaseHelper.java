@@ -12,7 +12,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_TICKET_NAME = "name";
     public static final String COLUMN_TICKET_PRICE = "price";
     public static final String TABLE_PASSENGERS = "passengers";
-    public static final String COLUMN_PASSSENGER_NAME = "name";
+    public static final String COLUMN_PASSENGER_NAME = "name";
     // 添加用户信息表相关内容
     public static final String TABLE_USERS = "users";
     public static final String COLUMN_USERNAME = "username";
@@ -27,11 +27,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             COLUMN_TICKET_NAME + " TEXT, " +
             COLUMN_TICKET_PRICE + " REAL" +
             ")";
-    // 创建表的 SQL 语句
+    // 创建乘客表的 SQL 语句
     private static final String SQL_CREATE_PASSENGERS_TABLE = "CREATE TABLE " +
             TABLE_PASSENGERS + "(" +
             COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            COLUMN_PASSSENGER_NAME + " TEXT" +
+            COLUMN_PASSENGER_NAME + " TEXT" +
             ")";
     // 创建用户信息表的 SQL 语句
     private static final String SQL_CREATE_USERS_TABLE = "CREATE TABLE " +
