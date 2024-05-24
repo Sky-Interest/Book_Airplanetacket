@@ -12,8 +12,9 @@ public class Ticket {
     private String seatType;
     private String seatNumber;
     private int passengerId;
+    private int remainingTickets; // 新增字段：剩余票数
 
-    public Ticket(int id, String flightNumber, String airline, String departureLocation, String destination, String departureTime, String arrivalTime, double price, String seatType, String seatNumber, int passengerId) {
+    public Ticket(int id, String flightNumber, String airline, String departureLocation, String destination, String departureTime, String arrivalTime, double price, String seatType, String seatNumber, int passengerId, int remainingTickets) {
         this.id = id;
         this.flightNumber = flightNumber;
         this.airline = airline;
@@ -25,8 +26,10 @@ public class Ticket {
         this.seatType = seatType;
         this.seatNumber = seatNumber;
         this.passengerId = passengerId;
+        this.remainingTickets = remainingTickets;
     }
 
+    // Getter 和 Setter 方法
     public int getId() {
         return id;
     }
@@ -113,5 +116,13 @@ public class Ticket {
 
     public void setPassengerId(int passengerId) {
         this.passengerId = passengerId;
+    }
+
+    public int getRemainingTickets() {
+        return remainingTickets;
+    }
+
+    public void setRemainingTickets(int remainingTickets) {
+        this.remainingTickets = remainingTickets;
     }
 }

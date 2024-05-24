@@ -28,7 +28,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     // 用户表相关字段
     public static final String TABLE_USERS = "users";
-    public static final String COLUMN_USER_ID = "id";
+    public static final String COLUMN_ID = "_id";
     public static final String COLUMN_USERNAME = "username";
     public static final String COLUMN_PASSWORD = "password";
 
@@ -49,7 +49,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     // 数据库名称和版本
     private static final String DATABASE_NAME = "air_ticket_booking.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     // 创建表的 SQL 语句
     private static final String SQL_CREATE_TICKETS_TABLE = "CREATE TABLE " +
@@ -61,7 +61,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             COLUMN_DESTINATION + " TEXT, " +
             COLUMN_DEPARTURE_TIME + " TEXT, " +
             COLUMN_ARRIVAL_TIME + " TEXT, " +
-            COLUMN_PRICE + " TEXT, " +  // 使用 TEXT 类型存储 BigDecimal 值
+            COLUMN_PRICE + " REAL, " +  // 使用 REAL 类型存储价格值
             COLUMN_SEAT_TYPE + " TEXT, " +
             COLUMN_SEAT_NUMBER + " TEXT, " +
             COLUMN_REMAINING_TICKETS + " INTEGER" +
@@ -76,7 +76,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String SQL_CREATE_USERS_TABLE = "CREATE TABLE " +
             TABLE_USERS + "(" +
-            COLUMN_USER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             COLUMN_USERNAME + " TEXT UNIQUE, " +
             COLUMN_PASSWORD + " TEXT" +
             ")";
@@ -90,7 +90,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             COLUMN_ORDER_DESTINATION + " TEXT, " +
             COLUMN_ORDER_DEPARTURE_TIME + " TEXT, " +
             COLUMN_ORDER_ARRIVAL_TIME + " TEXT, " +
-            COLUMN_ORDER_PRICE + " TEXT, " +
+            COLUMN_ORDER_PRICE + " REAL, " +
             COLUMN_ORDER_SEAT_TYPE + " TEXT, " +
             COLUMN_ORDER_SEAT_NUMBER + " TEXT, " +
             COLUMN_ORDER_PASSENGER_ID + " INTEGER, " +

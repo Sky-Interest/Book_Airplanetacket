@@ -3,20 +3,23 @@ package com.example.book_airplanetacket;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.book_airplanetacket.R;
+import com.example.book_airplanetacket.User;
 
 import java.util.Calendar;
 
 public class TicketBookingActivity extends AppCompatActivity {
 
+    private TextView tvUsername;
     private Button btnSelectDate;
     private ListView listViewTickets;
     private ArrayAdapter<String> ticketAdapter;
@@ -26,8 +29,15 @@ public class TicketBookingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ticket_booking);
 
+        tvUsername = findViewById(R.id.tvUsername);
         btnSelectDate = findViewById(R.id.btnSelectDate);
         listViewTickets = findViewById(R.id.listViewTickets);
+
+        // 显示当前登录的用户名
+        User currentUser = User.getCurrentUser();
+        if (currentUser != null) {
+            tvUsername.setText("Welcome, " + currentUser.getUsername());
+        }
 
         // 创建一个假数据的机票列表
         String[] tickets = {"Ticket 1", "Ticket 2", "Ticket 3", "Ticket 4", "Ticket 5"};
@@ -41,13 +51,13 @@ public class TicketBookingActivity extends AppCompatActivity {
         btnSelectDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // 在这里实现选择日期的逻辑
+                // 实现选择日期的逻辑
                 showDatePickerDialog();
             }
         });
     }
 
-    //获取日期的方法
+    // 获取日期的方法
     private void showDatePickerDialog() {
         // 获取当前日期
         final Calendar calendar = Calendar.getInstance();
