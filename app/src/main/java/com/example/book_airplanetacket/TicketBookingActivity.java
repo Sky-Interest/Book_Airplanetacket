@@ -1,9 +1,10 @@
 package com.example.book_airplanetacket;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -12,7 +13,7 @@ import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class TicketBookingActivity extends AppCompatActivity {
@@ -22,6 +23,7 @@ public class TicketBookingActivity extends AppCompatActivity {
     private Button btnAddPassenger;
     private ListView listViewTickets;
     private ArrayAdapter<String> ticketAdapter;
+    private DatabaseHelper databaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +34,7 @@ public class TicketBookingActivity extends AppCompatActivity {
         btnSelectDate = findViewById(R.id.btnSelectDate);
         btnAddPassenger = findViewById(R.id.btnAddPassenger);
         listViewTickets = findViewById(R.id.listViewTickets);
+        databaseHelper = new DatabaseHelper(this);
 
         // 显示当前登录的用户名
         User currentUser = User.getCurrentUser();
@@ -39,14 +42,8 @@ public class TicketBookingActivity extends AppCompatActivity {
             tvUsername.setText("Welcome, " + currentUser.getUsername());
         }
 
-        // 创建一个假数据的机票列表
-        String[] tickets = {"Ticket 1", "Ticket 2", "Ticket 3", "Ticket 4", "Ticket 5"};
-
-        // 使用默认的布局文件 android.R.layout.simple_list_item_1 创建 ArrayAdapter
-        ticketAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, tickets);
-
-        // 将 ArrayAdapter 设置给 ListView
-        listViewTickets.setAdapter(ticketAdapter);
+        // 从数据库获取机票数据
+        loadTicketsFromDatabase();
 
         btnSelectDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,6 +60,43 @@ public class TicketBookingActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    // 从数据库加载机票数据
+    private void loadTicketsFromDatabase() {
+        SQLiteDatabase db = databaseHelper.getReadableDatabase();
+        String[] projection = {
+                DatabaseHelper.COLUMN_DEPARTURE_LOCATION,
+                DatabaseHelper.COLUMN_DESTINATION,
+                DatabaseHelper.COLUMN_PRICE,
+                DatabaseHelper.COLUMN_REMAINING_TICKETS
+        };
+
+        Cursor cursor = db.query(
+                DatabaseHelper.TABLE_TICKETS,
+                projection,
+                null,
+                null,
+                null,
+                null,
+                null
+        );
+
+        ArrayList<String> tickets = new ArrayList<>();
+        while (cursor.moveToNext()) {
+            String departure = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_DEPARTURE_LOCATION));
+            String destination = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_DESTINATION));
+            double price = cursor.getDouble(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_PRICE));
+            int remainingTickets = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_REMAINING_TICKETS));
+            tickets.add("出发地: " + departure + ", 目的地: " + destination + ", 价格: ¥" + price + ", 余票: " + remainingTickets);
+        }
+        cursor.close();
+
+        // 使用默认的布局文件 android.R.layout.simple_list_item_1 创建 ArrayAdapter
+        ticketAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, tickets);
+
+        // 将 ArrayAdapter 设置给 ListView
+        listViewTickets.setAdapter(ticketAdapter);
     }
 
     // 获取日期的方法
