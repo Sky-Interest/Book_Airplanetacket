@@ -9,20 +9,24 @@
         android:id="@+id/etPassengerName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="乘客姓名" />
+        android:hint="Passenger Name" />
 
     <EditText
         android:id="@+id/etPhoneNumber"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="电话号码"
-        android:inputType="phone"
-        android:layout_marginTop="16dp" />
+        android:hint="Phone Number" />
+
+    <EditText
+        android:id="@+id/etIdCard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="ID Card" />
 
     <Button
         android:id="@+id/btnSavePassenger"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="保存"
-        android:layout_marginTop="16dp" />
+        android:text="Save Passenger" />
+
 </LinearLayout>

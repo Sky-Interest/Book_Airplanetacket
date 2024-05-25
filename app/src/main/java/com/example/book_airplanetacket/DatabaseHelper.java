@@ -25,6 +25,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_PASSENGER_ID = "id";
     public static final String COLUMN_PASSENGER_NAME = "name";
     public static final String COLUMN_PHONE_NUMBER = "phone_number";
+    public static final String COLUMN_ID_CARD = "id_card";  // 新增字段：身份证
 
     // 用户表相关字段
     public static final String TABLE_USERS = "users";
@@ -49,7 +50,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     // 数据库名称和版本
     private static final String DATABASE_NAME = "air_ticket_booking.db";
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 4; // 更新数据库版本
 
     // 创建表的 SQL 语句
     private static final String SQL_CREATE_TICKETS_TABLE = "CREATE TABLE " +
@@ -71,7 +72,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             TABLE_PASSENGERS + "(" +
             COLUMN_PASSENGER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             COLUMN_PASSENGER_NAME + " TEXT, " +
-            COLUMN_PHONE_NUMBER + " TEXT" +
+            COLUMN_PHONE_NUMBER + " TEXT, " +
+            COLUMN_ID_CARD + " TEXT" +  // 新增字段：身份证
             ")";
 
     private static final String SQL_CREATE_USERS_TABLE = "CREATE TABLE " +
