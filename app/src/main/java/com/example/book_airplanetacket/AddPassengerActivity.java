@@ -1,6 +1,7 @@
 package com.example.book_airplanetacket;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
@@ -15,6 +16,7 @@ public class AddPassengerActivity extends AppCompatActivity {
     private EditText etPassengerName, etPhoneNumber, etIdCard;
     private Button btnSavePassenger;
     private DatabaseHelper databaseHelper;
+    private int ticketId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +28,9 @@ public class AddPassengerActivity extends AppCompatActivity {
         etIdCard = findViewById(R.id.etIdCard);
         btnSavePassenger = findViewById(R.id.btnSavePassenger);
         databaseHelper = new DatabaseHelper(this);
+
+        // 获取从上一个界面传递过来的机票ID
+        ticketId = getIntent().getIntExtra("selectedTicketId", -1);
 
         btnSavePassenger.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -41,10 +46,12 @@ public class AddPassengerActivity extends AppCompatActivity {
         String idCard = etIdCard.getText().toString().trim();
 
         if (name.isEmpty() || phoneNumber.isEmpty() || idCard.isEmpty()) {
-            Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
+            // 如果有任何一个字段为空，则显示提示消息
+            Toast.makeText(this, "请填写所有字段", Toast.LENGTH_SHORT).show();
             return;
         }
 
+        // 将乘客信息添加到数据库
         SQLiteDatabase db = databaseHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(DatabaseHelper.COLUMN_PASSENGER_NAME, name);
@@ -53,10 +60,17 @@ public class AddPassengerActivity extends AppCompatActivity {
 
         long newRowId = db.insert(DatabaseHelper.TABLE_PASSENGERS, null, values);
         if (newRowId != -1) {
-            Toast.makeText(this, "Passenger added successfully", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "乘客添加成功", Toast.LENGTH_SHORT).show();
+            // 创建一个 Intent 以将乘客信息返回给 TicketBookingActivity
+            Intent intent = new Intent();
+            intent.putExtra("selectedTicketId", ticketId);
+            intent.putExtra("passengerName", name);
+            intent.putExtra("passengerPhoneNumber", phoneNumber);
+            intent.putExtra("passengerIdCard", idCard);
+            setResult(RESULT_OK, intent);
             finish();
         } else {
-            Toast.makeText(this, "Error adding passenger", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "添加乘客时出错", Toast.LENGTH_SHORT).show();
         }
         db.close();
     }

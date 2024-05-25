@@ -2,25 +2,16 @@ package com.example.book_airplanetacket;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.ContentValues;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.example.book_airplanetacket.R;
-import com.example.book_airplanetacket.DatabaseHelper;
 
 public class BookingDetailsActivity extends AppCompatActivity {
 
     private TextView tvTicketInfo;
-    private Button btnOrderTicket;
-    private EditText etPassengerName;
-    private Button btnAddPassenger;
     private DatabaseHelper dbHelper;
+    private int ticketId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,48 +19,71 @@ public class BookingDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_booking_details);
 
         tvTicketInfo = findViewById(R.id.tvTicketInfo);
-        btnOrderTicket = findViewById(R.id.btnOrderTicket);
 
-        // 获取从上一个界面传递过来的机票信息
-        String ticketInfo = getIntent().getStringExtra("ticket_info");
-        // 在 TextView 中显示机票信息
-        tvTicketInfo.setText(ticketInfo);
+        // 获取从上一个界面传递过来的机票 ID 和乘客信息
+        ticketId = getIntent().getIntExtra("selectedTicketId", -1);
+        String passengerName = getIntent().getStringExtra("passengerName");
+        String passengerPhoneNumber = getIntent().getStringExtra("passengerPhoneNumber");
+        String passengerIdCard = getIntent().getStringExtra("passengerIdCard");
 
-        //新建数据库对象
+        // 新建数据库对象
         dbHelper = new DatabaseHelper(this);
 
-        btnOrderTicket.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addPassengerToDatabase();
-            }
-        });
+        // 获取从数据库查询到的机票信息
+        String ticketInfo = getTicketInfo(ticketId);
+
+        // 拼接乘客信息
+        String passengerInfo = "\n乘客姓名: " + passengerName +
+                "\n电话号码: " + passengerPhoneNumber +
+                "\n身份证号: " + passengerIdCard;
+
+        // 在 TextView 中显示机票信息和乘客信息
+        tvTicketInfo.setText(ticketInfo + passengerInfo);
     }
 
-    private void addPassengerToDatabase() {
-        String passengerName = etPassengerName.getText().toString().trim();
+    // 根据机票ID从数据库中查询机票信息
+    private String getTicketInfo(int ticketId) {
+        String ticketInfo = "";
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        String[] projection = {
+                DatabaseHelper.COLUMN_DEPARTURE_LOCATION,
+                DatabaseHelper.COLUMN_DESTINATION,
+                DatabaseHelper.COLUMN_DEPARTURE_TIME,
+                DatabaseHelper.COLUMN_ARRIVAL_TIME,
+                DatabaseHelper.COLUMN_PRICE,
+                DatabaseHelper.COLUMN_REMAINING_TICKETS
+        };
+        String selection = DatabaseHelper.COLUMN_TICKET_ID + " = ?";
+        String[] selectionArgs = {String.valueOf(ticketId)};
 
-        // 检查乘客姓名是否为空
-        if (passengerName.isEmpty()) {
-            Toast.makeText(this, "Please enter passenger name", Toast.LENGTH_SHORT).show();
-            return;
+        Cursor cursor = db.query(
+                DatabaseHelper.TABLE_TICKETS,
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                null
+        );
+
+        if (cursor != null && cursor.moveToFirst()) {
+            String departureLocation = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_DEPARTURE_LOCATION));
+            String destination = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_DESTINATION));
+            String departureTime = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_DEPARTURE_TIME));
+            String arrivalTime = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ARRIVAL_TIME));
+            double price = cursor.getDouble(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_PRICE));
+            int remainingTickets = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_REMAINING_TICKETS));
+
+            ticketInfo = "出发地: " + departureLocation +
+                    "\n目的地: " + destination +
+                    "\n出发时间: " + departureTime +
+                    "\n到达时间: " + arrivalTime +
+                    "\n价格: ¥" + price +
+                    "\n剩余票数: " + remainingTickets;
+
+            cursor.close();
         }
 
-        // 获取可写的数据库
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-
-        // 创建一个 ContentValues 对象，用于存储数据
-        ContentValues values = new ContentValues();
-        values.put(DatabaseHelper.COLUMN_PASSENGER_NAME, passengerName);
-
-        // 向数据库插入数据
-        long newRowId = db.insert(DatabaseHelper.TABLE_PASSENGERS, null, values);
-
-        // 检查是否插入成功
-        if (newRowId == -1) {
-            Toast.makeText(this, "Error inserting passenger", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(this, "Passenger added successfully", Toast.LENGTH_SHORT).show();
-        }
+        return ticketInfo;
     }
 }
