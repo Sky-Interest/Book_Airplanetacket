@@ -1,37 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="?android:attr/windowBackground">
+
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/ic_launcher_background"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="32dp"/>
 
     <EditText
         android:id="@+id/etUsername"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Username"
-        android:inputType="text" />
+        android:hint="请输入通行证"
+        android:inputType="text"
+        android:backgroundTint="@color/purple_200"
+        android:textColor="@color/black"
+        android:textColorHint="@color/dark_gray"
+        android:padding="12dp"
+        android:layout_marginBottom="16dp"/>
 
     <EditText
         android:id="@+id/etPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Password"
+        android:hint="请输入密钥"
         android:inputType="textPassword"
-        android:layout_marginTop="16dp"/>
+        android:backgroundTint="@color/purple_200"
+        android:textColor="@color/black"
+        android:textColorHint="@color/dark_gray"
+        android:padding="12dp"
+        android:layout_marginBottom="16dp"/>
 
     <Button
         android:id="@+id/btnLogin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Login"
-        android:layout_marginTop="16dp"/>
+        android:text="开始属于您的旅程！"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/purple_500"
+        android:padding="16dp"
+        android:layout_marginBottom="16dp"/>
 
     <TextView
         android:id="@+id/tvRegister"
         android:layout_width="match_parent"
-        android:layout_height="33dp"
-        android:layout_marginTop="16dp"
+        android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="Don't have an account? Register"
-        android:textColor="@android:color/holo_blue_dark" />
+        android:text="没有通行证？前往登记吧！"
+        android:textColor="@color/purple_700"
+        android:textStyle="bold"/>
+
 </LinearLayout>

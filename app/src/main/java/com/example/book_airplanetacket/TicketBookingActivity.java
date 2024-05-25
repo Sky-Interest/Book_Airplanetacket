@@ -13,14 +13,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.book_airplanetacket.User;
-
 import java.util.Calendar;
 
 public class TicketBookingActivity extends AppCompatActivity {
 
     private TextView tvUsername;
     private Button btnSelectDate;
+    private Button btnAddPassenger;
     private ListView listViewTickets;
     private ArrayAdapter<String> ticketAdapter;
 
@@ -31,6 +30,7 @@ public class TicketBookingActivity extends AppCompatActivity {
 
         tvUsername = findViewById(R.id.tvUsername);
         btnSelectDate = findViewById(R.id.btnSelectDate);
+        btnAddPassenger = findViewById(R.id.btnAddPassenger);
         listViewTickets = findViewById(R.id.listViewTickets);
 
         // 显示当前登录的用户名
@@ -53,6 +53,14 @@ public class TicketBookingActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // 实现选择日期的逻辑
                 showDatePickerDialog();
+            }
+        });
+
+        btnAddPassenger.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(TicketBookingActivity.this, AddPassengerActivity.class);
+                startActivity(intent);
             }
         });
     }

@@ -49,7 +49,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     // 数据库名称和版本
     private static final String DATABASE_NAME = "air_ticket_booking.db";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 
     // 创建表的 SQL 语句
     private static final String SQL_CREATE_TICKETS_TABLE = "CREATE TABLE " +
