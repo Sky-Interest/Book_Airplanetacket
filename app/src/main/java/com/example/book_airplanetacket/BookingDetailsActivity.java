@@ -5,13 +5,23 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 public class BookingDetailsActivity extends AppCompatActivity {
 
     private TextView tvTicketInfo;
+    private TextView tvTotalPrice;
+    private CheckBox cbInsurance;
+    private RadioGroup rgInsurance;
+    private RadioButton rbBasicInsurance, rbPremiumInsurance;
     private DatabaseHelper dbHelper;
     private int ticketId;
+    private double ticketPrice;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,6 +29,11 @@ public class BookingDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_booking_details);
 
         tvTicketInfo = findViewById(R.id.tvTicketInfo);
+        tvTotalPrice = findViewById(R.id.tvTotalPrice);
+        cbInsurance = findViewById(R.id.cbInsurance);
+        rgInsurance = findViewById(R.id.rgInsurance);
+        rbBasicInsurance = findViewById(R.id.rbBasicInsurance);
+        rbPremiumInsurance = findViewById(R.id.rbPremiumInsurance);
 
         // 获取从上一个界面传递过来的机票 ID 和乘客信息
         ticketId = getIntent().getIntExtra("selectedTicketId", -1);
@@ -39,6 +54,28 @@ public class BookingDetailsActivity extends AppCompatActivity {
 
         // 在 TextView 中显示机票信息和乘客信息
         tvTicketInfo.setText(ticketInfo + passengerInfo);
+
+        // 设置默认总价
+        updateTotalPrice();
+
+        // 设置保险复选框改变的监听器
+        cbInsurance.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                rgInsurance.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+                rbBasicInsurance.setEnabled(isChecked);
+                rbPremiumInsurance.setEnabled(isChecked);
+                updateTotalPrice();
+            }
+        });
+
+        // 设置保险单选按钮改变的监听器
+        rgInsurance.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                updateTotalPrice();
+            }
+        });
     }
 
     // 根据机票ID从数据库中查询机票信息
@@ -77,7 +114,7 @@ public class BookingDetailsActivity extends AppCompatActivity {
             String destination = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_DESTINATION));
             String departureTime = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_DEPARTURE_TIME));
             String arrivalTime = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ARRIVAL_TIME));
-            double price = cursor.getDouble(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_PRICE));
+            ticketPrice = cursor.getDouble(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_PRICE));
             String seatType = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_SEAT_TYPE));
             String seatNumber = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_SEAT_NUMBER));
             int remainingTickets = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_REMAINING_TICKETS));
@@ -88,15 +125,25 @@ public class BookingDetailsActivity extends AppCompatActivity {
                     "\n目的地: " + destination +
                     "\n出发时间: " + departureTime +
                     "\n到达时间: " + arrivalTime +
-                    "\n价格: ¥" + price +
+                    "\n价格: ¥" + ticketPrice +
                     "\n座位类型: " + seatType +
-                    "\n座位号: " + seatNumber ;
-//                    +
-//                    "\n剩余票数: " + remainingTickets;
+                    "\n座位号: " + seatNumber;
+            //+
+            //"\n剩余票数: " + remainingTickets;
 
             cursor.close();
         }
 
         return ticketInfo;
+    }
+
+    // 更新总价
+    private void updateTotalPrice() {
+        double insurancePrice = 0;
+        if (cbInsurance.isChecked()) {
+            insurancePrice = rbBasicInsurance.isChecked() ? 100 : 200;
+        }
+        double totalPrice = ticketPrice + insurancePrice;
+        tvTotalPrice.setText("总价: ¥" + totalPrice);
     }
 }

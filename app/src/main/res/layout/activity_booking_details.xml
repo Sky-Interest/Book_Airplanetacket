@@ -9,8 +9,8 @@
         android:id="@+id/tvTicketDetails"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Ticket Details"
-        android:textSize="18sp"
+        android:text="机票订单详细信息"
+        android:textSize="32sp"
         android:textStyle="bold"
         android:layout_marginBottom="16dp"/>
 
@@ -21,6 +21,46 @@
         android:text="Ticket Information"
         android:textSize="16sp"
         android:layout_marginBottom="16dp"/>
+
+    <CheckBox
+        android:id="@+id/cbInsurance"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="购买航班组合险"
+        android:textSize="18sp"
+        android:layout_marginBottom="16dp"/>
+
+    <RadioGroup
+        android:id="@+id/rgInsurance"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <RadioButton
+            android:id="@+id/rbBasicInsurance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="普通人身保险 (100元)"
+            android:checked="true"
+            android:enabled="false"/>
+
+        <RadioButton
+            android:id="@+id/rbPremiumInsurance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="至尊全程保险 (200元)"
+            android:enabled="false"/>
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/tvTotalPrice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="总价: ¥"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginTop="16dp"/>
 
     <Button
         android:id="@+id/btnOrderTicket"
