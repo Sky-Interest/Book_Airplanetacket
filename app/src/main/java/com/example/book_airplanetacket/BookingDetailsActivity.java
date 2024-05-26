@@ -46,11 +46,15 @@ public class BookingDetailsActivity extends AppCompatActivity {
         String ticketInfo = "";
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         String[] projection = {
+                DatabaseHelper.COLUMN_FLIGHT_NUMBER,
+                DatabaseHelper.COLUMN_AIRLINE,
                 DatabaseHelper.COLUMN_DEPARTURE_LOCATION,
                 DatabaseHelper.COLUMN_DESTINATION,
                 DatabaseHelper.COLUMN_DEPARTURE_TIME,
                 DatabaseHelper.COLUMN_ARRIVAL_TIME,
                 DatabaseHelper.COLUMN_PRICE,
+                DatabaseHelper.COLUMN_SEAT_TYPE,
+                DatabaseHelper.COLUMN_SEAT_NUMBER,
                 DatabaseHelper.COLUMN_REMAINING_TICKETS
         };
         String selection = DatabaseHelper.COLUMN_TICKET_ID + " = ?";
@@ -67,19 +71,28 @@ public class BookingDetailsActivity extends AppCompatActivity {
         );
 
         if (cursor != null && cursor.moveToFirst()) {
+            String flightNumber = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_FLIGHT_NUMBER));
+            String airline = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_AIRLINE));
             String departureLocation = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_DEPARTURE_LOCATION));
             String destination = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_DESTINATION));
             String departureTime = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_DEPARTURE_TIME));
             String arrivalTime = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ARRIVAL_TIME));
             double price = cursor.getDouble(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_PRICE));
+            String seatType = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_SEAT_TYPE));
+            String seatNumber = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_SEAT_NUMBER));
             int remainingTickets = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_REMAINING_TICKETS));
 
-            ticketInfo = "出发地: " + departureLocation +
+            ticketInfo = "航班号: " + flightNumber +
+                    "\n航空公司: " + airline +
+                    "\n出发地: " + departureLocation +
                     "\n目的地: " + destination +
                     "\n出发时间: " + departureTime +
                     "\n到达时间: " + arrivalTime +
                     "\n价格: ¥" + price +
-                    "\n剩余票数: " + remainingTickets;
+                    "\n座位类型: " + seatType +
+                    "\n座位号: " + seatNumber ;
+//                    +
+//                    "\n剩余票数: " + remainingTickets;
 
             cursor.close();
         }
