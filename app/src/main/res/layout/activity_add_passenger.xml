@@ -5,28 +5,38 @@
     android:orientation="vertical"
     android:padding="16dp">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="请先添加乘客信息"
+        android:textSize="32sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="30dp"/>
+
     <EditText
         android:id="@+id/etPassengerName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Passenger Name" />
+        android:hint="乘客姓名" />
 
     <EditText
         android:id="@+id/etPhoneNumber"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Phone Number" />
+        android:hint="手机号码" />
 
     <EditText
         android:id="@+id/etIdCard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="ID Card" />
+        android:hint="身份证号"
+        android:layout_marginBottom="30dp"
+        />
 
     <Button
         android:id="@+id/btnSavePassenger"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Save Passenger" />
+        android:text="保存乘客" />
 
 </LinearLayout>

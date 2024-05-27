@@ -29,7 +29,7 @@
         android:id="@+id/etPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="请输入密钥"
+        android:hint="请输入密码"
         android:inputType="textPassword"
         android:backgroundTint="@color/purple_200"
         android:textColor="@color/black"

@@ -2,10 +2,12 @@ package com.example.book_airplanetacket;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.RadioButton;
@@ -19,6 +21,7 @@ public class BookingDetailsActivity extends AppCompatActivity {
     private CheckBox cbInsurance;
     private RadioGroup rgInsurance;
     private RadioButton rbBasicInsurance, rbPremiumInsurance;
+    private Button btnOrderTicket;
     private DatabaseHelper dbHelper;
     private int ticketId;
     private double ticketPrice;
@@ -34,6 +37,7 @@ public class BookingDetailsActivity extends AppCompatActivity {
         rgInsurance = findViewById(R.id.rgInsurance);
         rbBasicInsurance = findViewById(R.id.rbBasicInsurance);
         rbPremiumInsurance = findViewById(R.id.rbPremiumInsurance);
+        btnOrderTicket = findViewById(R.id.btnOrderTicket);
 
         // 获取从上一个界面传递过来的机票 ID 和乘客信息
         ticketId = getIntent().getIntExtra("selectedTicketId", -1);
@@ -74,6 +78,21 @@ public class BookingDetailsActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 updateTotalPrice();
+            }
+        });
+
+        // 设置前往支付按钮的点击事件
+        btnOrderTicket.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(BookingDetailsActivity.this, PaymentActivity.class);
+                intent.putExtra("ticketId", ticketId);
+                intent.putExtra("passengerName", passengerName);
+                intent.putExtra("passengerPhoneNumber", passengerPhoneNumber);
+                intent.putExtra("passengerIdCard", passengerIdCard);
+                intent.putExtra("insuranceType", getSelectedInsuranceType());
+                intent.putExtra("totalPrice", getTotalPrice());
+                startActivity(intent);
             }
         });
     }
@@ -117,7 +136,6 @@ public class BookingDetailsActivity extends AppCompatActivity {
             ticketPrice = cursor.getDouble(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_PRICE));
             String seatType = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_SEAT_TYPE));
             String seatNumber = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_SEAT_NUMBER));
-            int remainingTickets = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_REMAINING_TICKETS));
 
             ticketInfo = "航班号: " + flightNumber +
                     "\n航空公司: " + airline +
@@ -128,8 +146,6 @@ public class BookingDetailsActivity extends AppCompatActivity {
                     "\n价格: ¥" + ticketPrice +
                     "\n座位类型: " + seatType +
                     "\n座位号: " + seatNumber;
-            //+
-            //"\n剩余票数: " + remainingTickets;
 
             cursor.close();
         }
@@ -145,5 +161,22 @@ public class BookingDetailsActivity extends AppCompatActivity {
         }
         double totalPrice = ticketPrice + insurancePrice;
         tvTotalPrice.setText("总价: ¥" + totalPrice);
+    }
+
+    // 获取选中的保险类型
+    private int getSelectedInsuranceType() {
+        if (!cbInsurance.isChecked()) {
+            return 0;
+        }
+        return rbBasicInsurance.isChecked() ? 1 : 2;
+    }
+
+    // 获取总价
+    private double getTotalPrice() {
+        double insurancePrice = 0;
+        if (cbInsurance.isChecked()) {
+            insurancePrice = rbBasicInsurance.isChecked() ? 100 : 200;
+        }
+        return ticketPrice + insurancePrice;
     }
 }

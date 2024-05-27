@@ -47,10 +47,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_ORDER_SEAT_NUMBER = "seat_number";
     public static final String COLUMN_ORDER_PASSENGER_ID = "passenger_id";
     public static final String COLUMN_ORDER_TICKET_COUNT = "ticket_count"; // 新增字段：购买的票数
+    public static final String COLUMN_ORDER_INSURANCE_TYPE = "insurance_type"; // 新增字段：航班险类型
+    public static final String COLUMN_ORDER_TOTAL_PRICE = "total_price"; // 新增字段：总价
 
     // 数据库名称和版本
     private static final String DATABASE_NAME = "air_ticket_booking.db";
-    private static final int DATABASE_VERSION = 4; // 更新数据库版本
+    private static final int DATABASE_VERSION = 5; // 更新数据库版本
 
     // 创建表的 SQL 语句
     private static final String SQL_CREATE_TICKETS_TABLE = "CREATE TABLE " +
@@ -97,6 +99,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             COLUMN_ORDER_SEAT_NUMBER + " TEXT, " +
             COLUMN_ORDER_PASSENGER_ID + " INTEGER, " +
             COLUMN_ORDER_TICKET_COUNT + " INTEGER, " +  // 新增字段：购买的票数
+            COLUMN_ORDER_INSURANCE_TYPE + " TEXT, " + // 新增字段：航班险类型
+            COLUMN_ORDER_TOTAL_PRICE + " REAL, " + // 新增字段：总价
             "FOREIGN KEY(" + COLUMN_ORDER_PASSENGER_ID + ") REFERENCES " + TABLE_PASSENGERS + "(" + COLUMN_PASSENGER_ID + ")" +
             ")";
 
