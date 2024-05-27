@@ -3,6 +3,7 @@ package com.example.book_airplanetacket;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -126,8 +127,11 @@ public class PaymentActivity extends AppCompatActivity {
             // 将订单信息插入数据库
             insertOrderIntoDatabase(flightNumber, airline, departureLocation, destination, departureTime, arrivalTime, price, seatType, seatNumber, passengerName, passengerPhoneNumber, passengerIdCard, insuranceType, totalPrice, paymentMethod);
 
-            // 这里只是一个示例，假设支付成功后显示一个 Toast 消息
-            Toast.makeText(this, "支付成功！感谢使用 " + paymentMethod+"进行支付！", Toast.LENGTH_SHORT).show();
+            // 显示支付成功消息并跳转回 TicketBookingActivity
+            Toast.makeText(this, "支付成功！感谢使用 " + paymentMethod + " 进行支付！", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(PaymentActivity.this, TicketBookingActivity.class);
+            startActivity(intent);
+            finish(); // 结束当前活动
         }
     }
 
