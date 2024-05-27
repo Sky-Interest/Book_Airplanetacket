@@ -27,6 +27,7 @@ public class TicketBookingActivity extends AppCompatActivity {
     private ArrayAdapter<String> ticketAdapter;
     private DatabaseHelper databaseHelper;
     private ArrayList<Ticket> tickets; // 存储机票信息
+    private String selectedDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +46,7 @@ public class TicketBookingActivity extends AppCompatActivity {
         }
 
         // 从数据库获取机票数据
-        loadTicketsFromDatabase();
+        loadTicketsFromDatabase(null);
 
         btnSelectDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,29 +60,44 @@ public class TicketBookingActivity extends AppCompatActivity {
             // 获取点击的机票
             Ticket selectedTicket = tickets.get(position);
 
-            // 跳转到添加乘客页面
-            Intent intent = new Intent(TicketBookingActivity.this, AddPassengerActivity.class);
-            intent.putExtra("selectedTicketId", selectedTicket.getId());
-            startActivityForResult(intent, REQUEST_ADD_PASSENGER);
+            // 检查机票剩余票数
+            if (selectedTicket.getRemainingTickets() > 0) {
+                // 跳转到添加乘客页面
+                Intent intent = new Intent(TicketBookingActivity.this, AddPassengerActivity.class);
+                intent.putExtra("selectedTicketId", selectedTicket.getId());
+                startActivityForResult(intent, REQUEST_ADD_PASSENGER);
+            } else {
+                Toast.makeText(TicketBookingActivity.this, "当前机票已售罄，请重新选择机票！", Toast.LENGTH_SHORT).show();
+            }
         });
     }
 
-    // 从数据库加载机票数据
-    private void loadTicketsFromDatabase() {
+    // 从数据库加载机票数据，参数 selectedDate 用于根据日期筛选
+    private void loadTicketsFromDatabase(String selectedDate) {
         SQLiteDatabase db = databaseHelper.getReadableDatabase();
         String[] projection = {
                 DatabaseHelper.COLUMN_TICKET_ID,
                 DatabaseHelper.COLUMN_DEPARTURE_LOCATION,
                 DatabaseHelper.COLUMN_DESTINATION,
                 DatabaseHelper.COLUMN_PRICE,
-                DatabaseHelper.COLUMN_REMAINING_TICKETS
+                DatabaseHelper.COLUMN_REMAINING_TICKETS,
+                DatabaseHelper.COLUMN_DEPARTURE_TIME
         };
+
+        String selection = null;
+        String[] selectionArgs = null;
+
+        // 如果选择了日期，则添加筛选条件
+        if (selectedDate != null) {
+            selection = DatabaseHelper.COLUMN_DEPARTURE_TIME + " LIKE ?";
+            selectionArgs = new String[]{selectedDate + "%"};
+        }
 
         Cursor cursor = db.query(
                 DatabaseHelper.TABLE_TICKETS,
                 projection,
-                null,
-                null,
+                selection,
+                selectionArgs,
                 null,
                 null,
                 null
@@ -95,11 +111,12 @@ public class TicketBookingActivity extends AppCompatActivity {
             String destination = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_DESTINATION));
             double price = cursor.getDouble(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_PRICE));
             int remainingTickets = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_REMAINING_TICKETS));
+            String departureTime = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_DEPARTURE_TIME));
 
-            Ticket ticket = new Ticket(id, "", "", departure, destination, "", "", price, "", "", -1, remainingTickets);
+            Ticket ticket = new Ticket(id, "", "", departure, destination, departureTime, "", price, "", "", -1, remainingTickets);
             tickets.add(ticket);
 
-            ticketDescriptions.add("出发地: " + departure + ", 目的地: " + destination + ", 价格: ¥" + price + ", 余票: " + remainingTickets);
+            ticketDescriptions.add("出发地: " + departure + ", 目的地: " + destination + ", 出发时间: " + departureTime + ", 价格: ¥" + price + ", 余票: " + remainingTickets);
         }
         cursor.close();
 
@@ -122,9 +139,12 @@ public class TicketBookingActivity extends AppCompatActivity {
         DatePickerDialog datePickerDialog = new DatePickerDialog(
                 this,
                 (view, year1, monthOfYear, dayOfMonth1) -> {
-                    // 处理选择的日期，这里我们只简单地显示一个 Toast
-                    String selectedDate = year1 + "-" + (monthOfYear + 1) + "-" + dayOfMonth1;
+                    // 保存选择的日期
+                    selectedDate = year1 + "-" + String.format("%02d", (monthOfYear + 1)) + "-" + String.format("%02d", dayOfMonth1);
+                    // 显示选择的日期
                     Toast.makeText(TicketBookingActivity.this, "Selected date: " + selectedDate, Toast.LENGTH_SHORT).show();
+                    // 根据选择的日期重新加载机票数据
+                    loadTicketsFromDatabase(selectedDate);
                 },
                 year, month, dayOfMonth);
 
