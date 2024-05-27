@@ -142,7 +142,7 @@ public class TicketBookingActivity extends AppCompatActivity {
                     // 保存选择的日期
                     selectedDate = year1 + "-" + String.format("%02d", (monthOfYear + 1)) + "-" + String.format("%02d", dayOfMonth1);
                     // 显示选择的日期
-                    Toast.makeText(TicketBookingActivity.this, "Selected date: " + selectedDate, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(TicketBookingActivity.this, "筛选时间：" + selectedDate, Toast.LENGTH_SHORT).show();
                     // 根据选择的日期重新加载机票数据
                     loadTicketsFromDatabase(selectedDate);
                 },

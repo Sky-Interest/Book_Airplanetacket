@@ -7,9 +7,9 @@
     android:background="?android:attr/windowBackground">
 
     <ImageView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:src="@drawable/ic_launcher_background"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:src="@drawable/cute"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="32dp"/>
 
@@ -19,9 +19,7 @@
         android:layout_height="wrap_content"
         android:hint="请输入通行证"
         android:inputType="text"
-        android:backgroundTint="@color/purple_200"
-        android:textColor="@color/black"
-        android:textColorHint="@color/dark_gray"
+
         android:padding="12dp"
         android:layout_marginBottom="16dp"/>
 
@@ -31,9 +29,7 @@
         android:layout_height="wrap_content"
         android:hint="请输入密码"
         android:inputType="textPassword"
-        android:backgroundTint="@color/purple_200"
-        android:textColor="@color/black"
-        android:textColorHint="@color/dark_gray"
+
         android:padding="12dp"
         android:layout_marginBottom="16dp"/>
 
@@ -42,8 +38,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="开始属于您的旅程！"
-        android:textColor="@color/white"
-        android:backgroundTint="@color/purple_500"
         android:padding="16dp"
         android:layout_marginBottom="16dp"/>
 
@@ -53,7 +47,6 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="没有通行证？前往登记吧！"
-        android:textColor="@color/purple_700"
         android:textStyle="bold"/>
 
 </LinearLayout>
